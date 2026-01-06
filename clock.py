@@ -21,6 +21,12 @@ def set_alarm(t):
     print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d}")
     return alarm
 
+def display_setting(mode = 24): 
+    if mode == 24 : 
+        print("24:00 display mode set")
+    elif mode == 12 : 
+        print("AM/PM display mode set")
+
 def clock(current_time, alarm):
     """ current_time est le tuple retourné par afficher_heure() 
     alarm est le tuple retourné par set_alarm 
@@ -47,4 +53,5 @@ if __name__ == "__main__" :
 
     current_time = afficher_heure((12, 0, 0))
     alarm = set_alarm((12, 0, 10))
+    display_setting()
     clock(current_time, alarm)
