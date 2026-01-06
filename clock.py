@@ -18,7 +18,13 @@ def set_alarm(t):
     alarm = t
     # :02d = on remplit avec des 0 si nécessaire, pour que cela fasse 2 caractères, 
     # d comme decimal integer
-    print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d}")
+    if mode == 24 : 
+        print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d}")
+    if mode == 12 : 
+        if alarm[0] <= 12 : 
+            print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d} AM")
+        if alarm[0] >= 12 : 
+            print(f"Alarm set at {alarm[0]-12:02d}:{alarm[1]:02d}:{alarm[2]:02d} PM")
     return alarm
 
 def display_setting(mode=24): 
@@ -78,6 +84,7 @@ def clock(current_time, alarm, mode):
             if h >= 12 and am_pm == "PM" : 
                 h -= 12 
                 am_pm = "AM"
+
             current_time = (h, m, s, am_pm)
             print(f"{current_time[0]:02d}:{current_time[1]:02d}:{current_time[2]:02d} {current_time[3]}")
             time.sleep(1)
@@ -88,5 +95,7 @@ if __name__ == "__main__" :
     mode = display_setting(12)
     # mode = display_setting(24)
     current_time = afficher_heure((23, 59, 55))
-    alarm = set_alarm((0, 0, 5))
+    # current_time = afficher_heure()
+    # alarm = set_alarm((0, 0, 1))
+    alarm = set_alarm((23,59,59))
     clock(current_time, alarm, mode)
