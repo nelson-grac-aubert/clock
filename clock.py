@@ -90,11 +90,16 @@ if __name__ == "__main__" :
 
     paused = False
     mode = 24
-    alarm = set_alarm((12,0,5))
+    alarm = None 
 
-    current_time = afficher_heure((12,0,0))
+    # alarm = set_alarm((12,0,5))
+
+    current_time = afficher_heure()
 
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
+    # clock_thread.daemon = True permet d'interrompre le thread avec un ctrl-c
+    # sans cette ligne, impossible d'interrompre le programme de cette manière
+    clock_thread.daemon = True
     clock_thread.start()
 
     # ne marche pas dans le terminal de VSCode, ouvrir un cmd.exe ou executer le fichier avec python
