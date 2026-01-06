@@ -29,7 +29,7 @@ def set_alarm(t):
             print(f"Alarm set at {alarm[0]-12:02d}:{alarm[1]:02d}:{alarm[2]:02d} PM")
     return alarm
 
-def display_setting(event=None): 
+def change_display_setting(event=None): 
     """ mode est 24 par défaut et correspond a l'affichage 23:59
     en appuyant sur m le mode change entre 24 et 12AM/PM """
     global mode
@@ -90,14 +90,19 @@ if __name__ == "__main__" :
 
     paused = False
     mode = 24
-    alarm = set_alarm((12,0,5))
+    alarm = None 
 
-    current_time = afficher_heure((12,0,0))
+    # alarm = set_alarm((12,0,5))
+
+    current_time = afficher_heure()
 
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
+    # clock_thread.daemon = True marque le thread comme un daemon, c'est à dire qu'il se 
+    # ferme automatiquement quand le programme main se termine 
+    clock_thread.daemon = True
     clock_thread.start()
 
     # ne marche pas dans le terminal de VSCode, ouvrir un cmd.exe ou executer le fichier avec python
     keyboard.on_press_key("p", toggle_pause)
-    keyboard.on_press_key("m", display_setting)
+    keyboard.on_press_key("m", change_display_setting)
     keyboard.wait()
