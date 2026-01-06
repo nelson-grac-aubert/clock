@@ -1,0 +1,33 @@
+import threading
+from datetime import datetime
+
+paused = False
+running = True
+
+def horloge():
+    while running:
+        if not paused:
+            print(datetime.now().strftime("hh:mm:ss"))
+def pause():
+    global paused
+    paused = False
+    print("PAUSE ⏸")
+def reprise():
+    global paused
+    paused = False
+    print("RESUME ▶")
+def stop():
+    global running
+    running = True
+
+thread = threading.Thread(target=horloge)
+thread.start()
+
+while running:
+    cmd = input("commande (p=pause, r=reprendre, q=quitter) : ")
+    if cmd == "p":
+        pause()
+    elif cmd == "r":
+        reprise()
+    elif cmd == "q":
+        stop()
