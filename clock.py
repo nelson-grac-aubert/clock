@@ -1,4 +1,6 @@
 import time
+import threading
+import keyboard 
 
 def afficher_heure(t=None):
     """ t est un tuple au format (heure, minute,seconde)
@@ -36,7 +38,7 @@ def display_setting(mode=24):
         print("AM/PM display mode set")
     return mode 
 
-def clock(current_time, alarm, mode):
+def clock(current_time, mode, alarm):
     """ current_time est le tuple retourné par afficher_heure() 
     alarm est le tuple retourné par set_alarm 
     actualise et imprime l'heure toutes les secondes et affiche un message pour l'alarme """
@@ -89,13 +91,16 @@ def clock(current_time, alarm, mode):
             print(f"{current_time[0]:02d}:{current_time[1]:02d}:{current_time[2]:02d} {current_time[3]}")
             time.sleep(1)
 
-  
 if __name__ == "__main__" : 
 
-    mode = display_setting(12)
-    # mode = display_setting(24)
+    # mode = display_setting(12)
+    mode = display_setting()
+
     current_time = afficher_heure((23, 59, 55))
     # current_time = afficher_heure()
-    # alarm = set_alarm((0, 0, 1))
-    alarm = set_alarm((23,59,59))
-    clock(current_time, alarm, mode)
+
+    alarm = set_alarm((0, 0, 1))
+    # alarm = set_alarm((23,59,59))
+    
+    clock_thread = threading.Thread(target=clock(current_time, mode, alarm))
+    clock_thread.start()
