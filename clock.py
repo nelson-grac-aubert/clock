@@ -39,45 +39,62 @@ def display_setting(mode=24):
     return mode 
 
 def clock(current_time, mode, alarm):
+    global paused
     h, m, s = current_time
 
     while True:
-        if mode == 24:
-            print(f"{h:02d}:{m:02d}:{s:02d}")
+        if not paused : 
+            if mode == 24:
+                print(f"{h:02d}:{m:02d}:{s:02d}")
 
-            if (h, m, s) == alarm:
-                print("Wake up granny Jeannine!")
-        else:
-            am_pm = "AM" if h < 12 else "PM"
-            display_h = h % 12
-            if display_h == 0:
-                display_h = 12
+                if (h, m, s) == alarm:
+                    print("Wake up granny Jeannine!")
+            else:
+                am_pm = "AM" if h < 12 else "PM"
+                display_h = h % 12
+                if display_h == 0:
+                    display_h = 12
 
-            print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
+                print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
 
-            if (h, m, s) == alarm:
-                print("Wake up granny Jeannine!")
+                if (h, m, s) == alarm:
+                    print("Wake up granny Jeannine!")
 
-        time.sleep(1)
-        s += 1
-        if s == 60:
-            s = 0
-            m += 1
-        if m == 60:
-            m = 0
-            h += 1
-        if h == 24:
-            h = 0
+            time.sleep(1)
+            s += 1
+            if s == 60:
+                s = 0
+                m += 1
+            if m == 60:
+                m = 0
+                h += 1
+            if h == 24:
+                h = 0
+        else : 
+            time.sleep(0.1)
+
+def toggle_pause(event=None):
+    global paused
+    paused = not paused
+    if paused:
+        print("Clock paused")
+    else:
+        print("Clock resumed")
 
 if __name__ == "__main__" : 
 
-    # mode = display_setting(12)
-    mode = display_setting()
+    paused = False
 
-    # current_time = afficher_heure((23, 59, 55))
+    mode = display_setting()
     current_time = afficher_heure()
 
     alarm = None
     
-    clock_thread = threading.Thread(target=clock(current_time, mode, alarm), args=(current_time, mode, alarm))
+    clock_thread = threading.Thread(target=clock, args=(current_time, mode, alarm))
     clock_thread.start()
+
+    keyboard.on_press_key("p", toggle_pause)
+    keyboard.wait()
+
+
+
