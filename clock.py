@@ -31,7 +31,7 @@ def set_alarm(t):
 
 def display_setting(event=None): 
     """ mode est 24 par défaut et correspond a l'affichage 23:59
-    si mode = 12, l'affichage sera AM/PM """
+    en appuyant sur m le mode change """
     global mode
     if mode == 12 : 
         mode = 24
@@ -77,6 +77,7 @@ def clock(current_time, alarm):
             time.sleep(0.1)
 
 def toggle_pause(event=None):
+    """ en appuyant sur p, l'horloge se met en pause et reprend """
     global paused
 
     paused = not paused
@@ -88,10 +89,10 @@ def toggle_pause(event=None):
 if __name__ == "__main__" : 
 
     paused = False
-    alarm = None
     mode = 24
+    alarm = set_alarm((12,0,5))
 
-    current_time = afficher_heure()
+    current_time = afficher_heure((12,0,0))
 
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
     clock_thread.start()
