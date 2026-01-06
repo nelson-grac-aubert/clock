@@ -29,7 +29,7 @@ def set_alarm(t):
             print(f"Alarm set at {alarm[0]-12:02d}:{alarm[1]:02d}:{alarm[2]:02d} PM")
     return alarm
 
-def display_setting(event=None): 
+def change_display_setting(event=None): 
     """ mode est 24 par défaut et correspond a l'affichage 23:59
     en appuyant sur m le mode change entre 24 et 12AM/PM """
     global mode
@@ -99,5 +99,5 @@ if __name__ == "__main__" :
 
     # ne marche pas dans le terminal de VSCode, ouvrir un cmd.exe ou executer le fichier avec python
     keyboard.on_press_key("p", toggle_pause)
-    keyboard.on_press_key("m", display_setting)
+    keyboard.on_press_key("m", change_display_setting)
     keyboard.wait()
