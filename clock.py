@@ -74,10 +74,10 @@ if __name__ == "__main__" :
     # mode = display_setting(12)
     mode = display_setting()
 
-    current_time = afficher_heure((23, 59, 55))
-    # current_time = afficher_heure()
+    # current_time = afficher_heure((23, 59, 55))
+    current_time = afficher_heure()
 
     alarm = None
     
-    clock_thread = threading.Thread(target=clock(current_time, mode, alarm))
+    clock_thread = threading.Thread(target=clock(current_time, mode, alarm), args=(current_time, mode, alarm))
     clock_thread.start()
