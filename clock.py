@@ -97,8 +97,8 @@ if __name__ == "__main__" :
     current_time = afficher_heure()
 
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
-    # clock_thread.daemon = True permet d'interrompre le thread avec un ctrl-c
-    # sans cette ligne, impossible d'interrompre le programme de cette manière
+    # clock_thread.daemon = True marque le thread comme un daemon, c'est à dire qu'il se 
+    # ferme automatiquement quand le programme main se termine 
     clock_thread.daemon = True
     clock_thread.start()
 
