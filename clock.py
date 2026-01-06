@@ -39,16 +39,26 @@ def display_setting(mode=24):
     return mode 
 
 def clock(current_time, mode, alarm):
-    """ current_time est le tuple retourné par afficher_heure() 
-    alarm est le tuple retourné par set_alarm 
-    actualise et imprime l'heure toutes les secondes et affiche un message pour l'alarme """
+    h, m, s = current_time
 
-    while mode == 24 :
-        print(f"{current_time[0]:02d}:{current_time[1]:02d}:{current_time[2]:02d}")
-        if current_time == alarm:
-            print("Wake up granny Jeannine!")
+    while True:
+        if mode == 24:
+            print(f"{h:02d}:{m:02d}:{s:02d}")
+
+            if (h, m, s) == alarm:
+                print("Wake up granny Jeannine!")
+        else:
+            am_pm = "AM" if h < 12 else "PM"
+            display_h = h % 12
+            if display_h == 0:
+                display_h = 12
+
+            print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
+
+            if (h, m, s) == alarm:
+                print("Wake up granny Jeannine!")
+
         time.sleep(1)
-        h, m, s = current_time
         s += 1
         if s == 60:
             s = 0
@@ -58,38 +68,6 @@ def clock(current_time, mode, alarm):
             h += 1
         if h == 24:
             h = 0
-        current_time = (h, m, s)
-
-    if mode == 12 :
-        if alarm[0] >= 12 : 
-            alarm_am_pm_format = (alarm[0]-12, alarm[1], alarm[2], "PM")
-        else : 
-            alarm_am_pm_format = (alarm[0], alarm[1], alarm[2], "AM")
-
-        h, m, s, am_pm = current_time + ("AM",)
-
-        while True : 
-            
-            if current_time == alarm_am_pm_format:
-                print("Wake up granny Jeannine!")
-
-            s += 1
-            if s == 60 :
-                s = 0
-                m += 1
-            if m == 60 :
-                m = 0
-                h += 1
-            if h >= 12 and am_pm == "AM" :
-                h -= 12
-                am_pm = "PM"
-            if h >= 12 and am_pm == "PM" : 
-                h -= 12 
-                am_pm = "AM"
-
-            current_time = (h, m, s, am_pm)
-            print(f"{current_time[0]:02d}:{current_time[1]:02d}:{current_time[2]:02d} {current_time[3]}")
-            time.sleep(1)
 
 if __name__ == "__main__" : 
 
@@ -99,8 +77,7 @@ if __name__ == "__main__" :
     current_time = afficher_heure((23, 59, 55))
     # current_time = afficher_heure()
 
-    alarm = set_alarm((0, 0, 1))
-    # alarm = set_alarm((23,59,59))
+    alarm = None
     
     clock_thread = threading.Thread(target=clock(current_time, mode, alarm))
     clock_thread.start()
