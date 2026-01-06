@@ -31,7 +31,7 @@ def set_alarm(t):
 
 def display_setting(event=None): 
     """ mode est 24 par défaut et correspond a l'affichage 23:59
-    en appuyant sur m le mode change """
+    en appuyant sur m le mode change entre 24 et 12AM/PM """
     global mode
     if mode == 12 : 
         mode = 24
@@ -39,6 +39,16 @@ def display_setting(event=None):
     elif mode == 24 :
         mode = 12
         print("AM/PM display mode set")
+
+def toggle_pause(event=None):
+    """ en appuyant sur p, l'horloge se met en pause et reprend """
+    global paused
+
+    paused = not paused
+    if paused:
+        print("Clock paused")
+    else:
+        print("Clock resumed")
 
 def clock(current_time, alarm):
     global paused
@@ -76,16 +86,6 @@ def clock(current_time, alarm):
         else : 
             time.sleep(0.1)
 
-def toggle_pause(event=None):
-    """ en appuyant sur p, l'horloge se met en pause et reprend """
-    global paused
-
-    paused = not paused
-    if paused:
-        print("Clock paused")
-    else:
-        print("Clock resumed")
-
 if __name__ == "__main__" : 
 
     paused = False
@@ -97,10 +97,7 @@ if __name__ == "__main__" :
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
     clock_thread.start()
 
+    # ne marche pas dans le terminal de VSCode, ouvrir un cmd.exe ou executer le fichier avec python
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", display_setting)
     keyboard.wait()
-
-
-
-
