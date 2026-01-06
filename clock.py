@@ -29,17 +29,20 @@ def set_alarm(t):
             print(f"Alarm set at {alarm[0]-12:02d}:{alarm[1]:02d}:{alarm[2]:02d} PM")
     return alarm
 
-def display_setting(mode=24): 
+def display_setting(event=None): 
     """ mode est 24 par défaut et correspond a l'affichage 23:59
     si mode = 12, l'affichage sera AM/PM """
-    if mode == 24 : 
+    global mode
+    if mode == 12 : 
+        mode = 24
         print("24:00 display mode set")
-    elif mode == 12 : 
+    elif mode == 24 :
+        mode = 12
         print("AM/PM display mode set")
-    return mode 
 
-def clock(current_time, mode, alarm):
+def clock(current_time, alarm):
     global paused
+    global mode
     h, m, s = current_time
 
     while True:
@@ -75,6 +78,7 @@ def clock(current_time, mode, alarm):
 
 def toggle_pause(event=None):
     global paused
+
     paused = not paused
     if paused:
         print("Clock paused")
@@ -84,17 +88,18 @@ def toggle_pause(event=None):
 if __name__ == "__main__" : 
 
     paused = False
+    alarm = None
+    mode = 24
 
-    mode = display_setting()
     current_time = afficher_heure()
 
-    alarm = None
-    
-    clock_thread = threading.Thread(target=clock, args=(current_time, mode, alarm))
+    clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
     clock_thread.start()
 
     keyboard.on_press_key("p", toggle_pause)
+    keyboard.on_press_key("m", display_setting)
     keyboard.wait()
+
 
 
 
