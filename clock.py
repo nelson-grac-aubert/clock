@@ -2,31 +2,51 @@ import time
 import threading
 import keyboard 
 
+def ask_for_time(message) : 
+    """ message is a string displayed to ask for input of custom time or alarm 
+    returns a tuple to take as argument for afficher_heure or set_alarm """
+    custom_time = input(message)
+    if custom_time == "" : 
+        return None
+    try:
+        # split(":") coupe la string de l'input au niveau des : et en fait une liste de string
+        # map(int, liste) applique int() à tous les elements de la liste
+        # on aboutit donc à un tuple d'int, format attendu de nos fonctions suivantes
+        h, m, s = map(int, custom_time.split(":"))
+        return (h, m, s)
+    except ValueError:
+        print("Invalid format. Expected hh:mm:ss")
+        return None
+
 def afficher_heure(t=None):
-    """ t est un tuple au format (heure, minute,seconde)
-    si aucun tuple n'est renseigné, prend l'heure locale par défaut """
+    """ t is a tuple (int,int,int)
+    if None, default local time is chosen """
 
     if t is None:
         local = time.localtime()
         current_time = (local.tm_hour, local.tm_min, local.tm_sec)
+        print("\nDefault local time has been set.")
     else:
         current_time = t
     return current_time
 
-def set_alarm(t):
-    """ t est un tuple au format (heure, minute, seconde)
-    affiche un message en terminal lorsque l'heure de l'horloge est celle de l'alarme """
+def set_alarm(t=None):
+    """ t is a tuple (int,int,int)
+    if None, no alarm is set """
 
     alarm = t
     # :02d = on remplit avec des 0 si nécessaire, pour que cela fasse 2 caractères, 
     # d comme decimal integer
+    if alarm == None : 
+        print("\nNo alarm has been set")
+        return None
     if mode == 24 : 
-        print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d}")
+        print(f"\nAlarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d}")
     if mode == 12 : 
         if alarm[0] <= 12 : 
-            print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d} AM")
+            print(f"\nAlarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d} AM")
         if alarm[0] >= 12 : 
-            print(f"Alarm set at {alarm[0]-12:02d}:{alarm[1]:02d}:{alarm[2]:02d} PM")
+            print(f"\nAlarm set at {alarm[0]-12:02d}:{alarm[1]:02d}:{alarm[2]:02d} PM")
     return alarm
 
 def change_display_setting(event=None): 
@@ -54,6 +74,9 @@ def clock(current_time, alarm):
     global paused
     global mode
     h, m, s = current_time
+
+    print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
+    print("Press P to pause and resume the clock at any time\n")
 
     while True:
         if not paused : 
@@ -90,11 +113,12 @@ if __name__ == "__main__" :
 
     paused = False
     mode = 24
-    alarm = None 
 
-    # alarm = set_alarm((12,0,5))
+    alarm = ask_for_time("Do you wish to set an alarm? If so, type it with the format hh:mm:ss \nPress enter to skip ")
+    set_alarm(alarm)
 
-    current_time = afficher_heure()
+    custom_time = ask_for_time("\nDo you wish to set a custom current time? If so, type it with the format hh:mm:ss \nPress enter to set default local time ")
+    current_time = afficher_heure(custom_time)
 
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
     # clock_thread.daemon = True marque le thread comme un daemon, c'est à dire qu'il se 
