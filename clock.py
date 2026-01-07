@@ -1,10 +1,21 @@
 import time
 import threading
 import keyboard 
+# gestion des entrées clavier
+import msvcrt
+
+def clear_input_buffer():
+    """ called to clear the keyboard buffer due to keyboard library
+    allows to always start with an empty imput field """
+    # as long as there's an input in the keyboard buffer
+    while msvcrt.kbhit():
+        # remove one
+        msvcrt.getch()
 
 def ask_for_time(message) : 
     """ message is a string displayed to ask for input of custom time or alarm 
     returns a tuple to take as argument for afficher_heure or set_alarm """
+    clear_input_buffer()
     custom_time = input(message)
     if custom_time == "" : 
         return None
