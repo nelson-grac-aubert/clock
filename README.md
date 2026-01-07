@@ -18,3 +18,4 @@ Press enter to skip and set no alarm / default local time respectively.
 
 To pause and resume the clock, type P on the keyboard  
 To toggle between 24H and 12AM/PM display, type M on the keyboard  
+To set an alarm at any time while the clock is running, press A on the keyboard
