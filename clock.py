@@ -1,7 +1,7 @@
 import time
 import threading
 import keyboard 
-# gestion des entrées clavier
+# keyboard input management
 import msvcrt
 
 def clear_input_buffer():
@@ -46,8 +46,7 @@ def set_alarm(t=None):
     if None, no alarm is set """
 
     alarm = t
-    # :02d = on remplit avec des 0 si nécessaire, pour que cela fasse 2 caractères, 
-    # d comme decimal integer
+    # :02d = fills with 0 until there are 2 characters, d means decimal integer
     if alarm == None : 
         print("\nNo alarm has been set")
         return None
@@ -61,8 +60,7 @@ def set_alarm(t=None):
     return alarm
 
 def change_display_setting(event=None): 
-    """ mode est 24 par défaut et correspond a l'affichage 23:59
-    en appuyant sur m le mode change entre 24 et 12AM/PM """
+    """ swaps mode between 24H and AM/PM """
     global mode
     if mode == 12 : 
         mode = 24
@@ -72,7 +70,7 @@ def change_display_setting(event=None):
         print("AM/PM display mode set")
 
 def toggle_pause(event=None):
-    """ en appuyant sur p, l'horloge se met en pause et reprend """
+    """ Toggles pause for clock """
     global paused
 
     paused = not paused
@@ -89,6 +87,21 @@ def change_alarm(event=None) :
     alarm = set_alarm(temp_alarm)
     printing = True
 
+def display_time(h, m, s, mode, alarm):
+    """ Prints current time, depending on mode, prints alarm message """
+
+    if mode == 24:
+        print(f"{h:02d}:{m:02d}:{s:02d}")
+    else:
+        am_pm = "AM" if h < 12 else "PM"
+        display_h = h % 12
+        if display_h == 0:
+            display_h = 12
+        print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
+
+    if (h, m, s) == alarm:
+        print("Wake up granny Jeannine!")
+
 def clock(current_time):
     global alarm
     global paused
@@ -102,21 +115,7 @@ def clock(current_time):
     while True:
         if not paused : 
             if printing : 
-                if mode == 24:
-                    print(f"{h:02d}:{m:02d}:{s:02d}")
-
-                    if (h, m, s) == alarm:
-                        print("Wake up granny Jeannine!")
-                else:
-                    am_pm = "AM" if h < 12 else "PM"
-                    display_h = h % 12
-                    if display_h == 0:
-                        display_h = 12
-
-                    print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
-
-                    if (h, m, s) == alarm:
-                        print("Wake up granny Jeannine!")
+                display_time(h,m,s,mode,alarm)
 
             time.sleep(1)
             s += 1
@@ -129,6 +128,7 @@ def clock(current_time):
             if h == 24:
                 h = 0
         else : 
+            # short sleep to save on CPU during while loop without printing
             time.sleep(0.1)
 
 if __name__ == "__main__" : 
@@ -144,12 +144,12 @@ if __name__ == "__main__" :
     current_time = afficher_heure(custom_time)
 
     clock_thread = threading.Thread(target=clock, args=(current_time,))
-    # clock_thread.daemon = True marque le thread comme un daemon, c'est à dire qu'il se 
-    # ferme automatiquement quand le programme main se termine 
+    # clock_thread.daemon = True flags the thread as a daemon, which  
+    # closes it automatically when the programm stops
     clock_thread.daemon = True
     clock_thread.start()
 
-    # ne marche pas dans le terminal de VSCode, ouvrir un cmd.exe ou executer le fichier avec python
+    # keyboard doesn't work in IDEs such as VSCode : open the programm in terminal with Python
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", change_display_setting)
     keyboard.on_press_key("a", change_alarm)
