@@ -60,7 +60,7 @@ def set_alarm(t=None):
     return alarm
 
 def change_display_setting(event=None): 
-    """ swaps mode between 24H and AM/PM """
+    """ Swaps mode between 24H and AM/PM """
     global mode
     if mode == 12 : 
         mode = 24
@@ -80,6 +80,7 @@ def toggle_pause(event=None):
         print("Clock resumed")
 
 def change_alarm(event=None) : 
+    """ Opens input to set new alarm """
     global printing
     global alarm
     printing = False
@@ -115,7 +116,7 @@ def clock(current_time):
     while True:
         if not paused : 
             if printing : 
-                display_time(h,m,s,mode,alarm)
+                display_time(h, m, s, mode, alarm)
 
             time.sleep(1)
             s += 1
