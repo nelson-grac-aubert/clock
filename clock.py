@@ -75,8 +75,8 @@ def clock(current_time, alarm):
     global mode
     h, m, s = current_time
 
-    print("\nDefault display mode is 24:00. Press m to toggle between AM/PM.")
-    print("Press p to pause and resume the clock at any time")
+    print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
+    print("Press P to pause and resume the clock at any time\n")
 
     while True:
         if not paused : 
@@ -114,7 +114,7 @@ if __name__ == "__main__" :
     paused = False
     mode = 24
 
-    alarm = ask_for_time("Do you wish to set an alarm? If so, type it with the format hh:mm:ss, else press enter ")
+    alarm = ask_for_time("Do you wish to set an alarm? If so, type it with the format hh:mm:ss \nPress enter to skip ")
     set_alarm(alarm)
 
     custom_time = ask_for_time("\nDo you wish to set a custom current time? If so, type it with the format hh:mm:ss \nPress enter to set default local time ")
