@@ -1,10 +1,21 @@
 import time
 import threading
 import keyboard 
+# gestion des entrées clavier
+import msvcrt
+
+def clear_input_buffer():
+    """ called to clear the keyboard buffer due to keyboard library
+    allows to always start with an empty imput field """
+    # as long as there's an input in the keyboard buffer
+    while msvcrt.kbhit():
+        # remove one
+        msvcrt.getch()
 
 def ask_for_time(message) : 
     """ message is a string displayed to ask for input of custom time or alarm 
     returns a tuple to take as argument for afficher_heure or set_alarm """
+    clear_input_buffer()
     custom_time = input(message)
     if custom_time == "" : 
         return None
@@ -70,8 +81,18 @@ def toggle_pause(event=None):
     else:
         print("Clock resumed")
 
-def clock(current_time, alarm):
+def change_alarm(event=None) : 
+    global printing
+    global alarm
+    printing = False
+    temp_alarm = ask_for_time("Enter a new alarm with hh:mm:ss format. Press enter to cancel. \n")
+    alarm = set_alarm(temp_alarm)
+    printing = True
+
+def clock(current_time):
+    global alarm
     global paused
+    global printing
     global mode
     h, m, s = current_time
 
@@ -80,21 +101,22 @@ def clock(current_time, alarm):
 
     while True:
         if not paused : 
-            if mode == 24:
-                print(f"{h:02d}:{m:02d}:{s:02d}")
+            if printing : 
+                if mode == 24:
+                    print(f"{h:02d}:{m:02d}:{s:02d}")
 
-                if (h, m, s) == alarm:
-                    print("Wake up granny Jeannine!")
-            else:
-                am_pm = "AM" if h < 12 else "PM"
-                display_h = h % 12
-                if display_h == 0:
-                    display_h = 12
+                    if (h, m, s) == alarm:
+                        print("Wake up granny Jeannine!")
+                else:
+                    am_pm = "AM" if h < 12 else "PM"
+                    display_h = h % 12
+                    if display_h == 0:
+                        display_h = 12
 
-                print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
+                    print(f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}")
 
-                if (h, m, s) == alarm:
-                    print("Wake up granny Jeannine!")
+                    if (h, m, s) == alarm:
+                        print("Wake up granny Jeannine!")
 
             time.sleep(1)
             s += 1
@@ -111,6 +133,7 @@ def clock(current_time, alarm):
 
 if __name__ == "__main__" : 
 
+    printing = True
     paused = False
     mode = 24
 
@@ -120,7 +143,7 @@ if __name__ == "__main__" :
     custom_time = ask_for_time("\nDo you wish to set a custom current time? If so, type it with the format hh:mm:ss \nPress enter to set default local time ")
     current_time = afficher_heure(custom_time)
 
-    clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
+    clock_thread = threading.Thread(target=clock, args=(current_time,))
     # clock_thread.daemon = True marque le thread comme un daemon, c'est à dire qu'il se 
     # ferme automatiquement quand le programme main se termine 
     clock_thread.daemon = True
@@ -129,4 +152,5 @@ if __name__ == "__main__" :
     # ne marche pas dans le terminal de VSCode, ouvrir un cmd.exe ou executer le fichier avec python
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", change_display_setting)
+    keyboard.on_press_key("a", change_alarm)
     keyboard.wait()
