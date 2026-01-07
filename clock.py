@@ -2,6 +2,21 @@ import time
 import threading
 import keyboard 
 
+def ask_for_time(message) : 
+    """ message is a string displayed to ask for input of custom time or alarm 
+    returns a tuple to take as argument for afficher_heure or set_alarm """
+    # message will be something like "Do you wish to set a custom alarm? 
+    # if so, type it in the format hh:mm:ss , else press enter"
+    custom_time = input(message)
+    if custom_time == "" : 
+        return None
+    try:
+        h, m, s = map(int, custom_time.split(":"))
+        return (h, m, s)
+    except ValueError:
+        print("Invalid format. Expected hh:mm:ss")
+        return None
+
 def afficher_heure(t=None):
     """ t est un tuple au format (heure, minute,seconde)
     si aucun tuple n'est renseigné, prend l'heure locale par défaut """
@@ -9,17 +24,21 @@ def afficher_heure(t=None):
     if t is None:
         local = time.localtime()
         current_time = (local.tm_hour, local.tm_min, local.tm_sec)
+        print("Default local time has been set")
     else:
         current_time = t
     return current_time
 
-def set_alarm(t):
+def set_alarm(t=None):
     """ t est un tuple au format (heure, minute, seconde)
     affiche un message en terminal lorsque l'heure de l'horloge est celle de l'alarme """
 
     alarm = t
     # :02d = on remplit avec des 0 si nécessaire, pour que cela fasse 2 caractères, 
     # d comme decimal integer
+    if alarm == None : 
+        print("No alarm has been set")
+        return None
     if mode == 24 : 
         print(f"Alarm set at {alarm[0]:02d}:{alarm[1]:02d}:{alarm[2]:02d}")
     if mode == 12 : 
@@ -92,9 +111,11 @@ if __name__ == "__main__" :
     mode = 24
     alarm = None 
 
-    # alarm = set_alarm((12,0,5))
+    alarm = ask_for_time("Do you wish to set an alarm? If so, type it with the format hh:mm:ss, else press enter ")
+    set_alarm(alarm)
 
-    current_time = afficher_heure()
+    custom_time = ask_for_time("Do you wish to set a custom current time? If so, type it with the format hh:mm:ss . Press enter to set default local time ")
+    current_time = afficher_heure(custom_time)
 
     clock_thread = threading.Thread(target=clock, args=(current_time, alarm))
     # clock_thread.daemon = True marque le thread comme un daemon, c'est à dire qu'il se 
