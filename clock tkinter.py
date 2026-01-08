@@ -2,6 +2,7 @@ import time
 import threading
 import tkinter as tk
 from tkinter import simpledialog, messagebox
+import pygame
 
 paused = False
 mode = 24
@@ -32,8 +33,9 @@ def clock_loop():
             time_label.config(text=time_str)
 
             if alarm and tuple(current_time) == alarm:
+                play_sound()
                 messagebox.showinfo("Alarm", "Wake up granny Jeannine!")
-
+                
             time.sleep(1)
 
             current_time[2] += 1
@@ -94,9 +96,15 @@ def on_close():
     running = False
     root.destroy()
 
-# -------------------- GUI SETUP --------------------
+def play_sound():
+    pygame.mixer.init()
+    pygame.mixer.music.load("alarm.wav")
+    pygame.mixer.music.play()
+
+# TKINTER GUI 
+
 root = tk.Tk()
-root.title("Clock guide")
+root.title("Clock")
 root.geometry("300x200")
 root.resizable(False, False)
 
@@ -120,10 +128,10 @@ time_btn.grid(row=1, column=1, padx=5, pady=5)
 
 root.protocol("WM_DELETE_WINDOW", on_close)
 
-# -------------------- START --------------------
-current_time = get_local_time()
+if __name__ == "__main__" : 
+    current_time = get_local_time()
 
-clock_thread = threading.Thread(target=clock_loop, daemon=True)
-clock_thread.start()
+    clock_thread = threading.Thread(target=clock_loop, daemon=True)
+    clock_thread.start()
 
-root.mainloop()
+    root.mainloop()
