@@ -6,6 +6,12 @@ import msvcrt
 import pygame
 import os
 
+printing = True
+paused = False
+mode = 24
+alarm_input = "Do you wish to set an alarm? If so, type it with the format hh:mm:ss \nPress enter to skip "
+time_input = "\nDo you wish to set a custom current time? If so, type it with the format hh:mm:ss \nPress enter to set default local time "
+
 def clear_input_buffer():
     """ called to clear the keyboard buffer due to keyboard library
     allows to always start with an empty imput field """
@@ -144,17 +150,18 @@ def play_sound():
     pygame.mixer.music.load(sound_path)
     pygame.mixer.music.play()
 
+def keyboard_inputs() : 
+    keyboard.on_press_key("p", toggle_pause)
+    keyboard.on_press_key("m", change_display_setting)
+    keyboard.on_press_key("ctrl", change_alarm)
+    keyboard.wait()
 
 if __name__ == "__main__" : 
 
-    printing = True
-    paused = False
-    mode = 24
-
-    alarm = ask_for_time("Do you wish to set an alarm? If so, type it with the format hh:mm:ss \nPress enter to skip ")
+    alarm = ask_for_time(alarm_input)
     set_alarm(alarm)
 
-    custom_time = ask_for_time("\nDo you wish to set a custom current time? If so, type it with the format hh:mm:ss \nPress enter to set default local time ")
+    custom_time = ask_for_time(time_input)
     current_time = afficher_heure(custom_time)
 
     clock_thread = threading.Thread(target=clock, args=(current_time,))
@@ -164,7 +171,4 @@ if __name__ == "__main__" :
     clock_thread.start()
 
     # keyboard doesn't work in IDEs such as VSCode : open the programm in terminal with Python
-    keyboard.on_press_key("p", toggle_pause)
-    keyboard.on_press_key("m", change_display_setting)
-    keyboard.on_press_key("ctrl", change_alarm)
-    keyboard.wait()
+    keyboard_inputs()
