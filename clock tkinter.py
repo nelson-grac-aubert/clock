@@ -23,13 +23,12 @@ def format_time(h, m, s):
             display_h = 12
         return f"{display_h:02d}:{m:02d}:{s:02d} {am_pm}"
 
-
 def clock_loop():
     global alarm
 
     while running:
         if not paused:
-            time_str = format_time(*current_time)
+            time_str = format_time(current_time[0], current_time[1], current_time[2])
             time_label.config(text=time_str)
 
             if alarm and tuple(current_time) == alarm:
@@ -97,6 +96,7 @@ def on_close():
     root.destroy()
 
 def play_sound():
+    """ Plays alarm sound """
     pygame.mixer.init()
     pygame.mixer.music.load("alarm.wav")
     pygame.mixer.music.play()

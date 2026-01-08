@@ -111,7 +111,8 @@ def clock(current_time):
     h, m, s = current_time
 
     print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
-    print("Press P to pause and resume the clock at any time\n")
+    print("Press P to pause and resume the clock at any time")
+    print("Press A to set an alarm at any time\n")
 
     while True:
         if not paused : 
