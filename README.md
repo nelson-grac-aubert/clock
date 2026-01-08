@@ -5,9 +5,12 @@ Python terminal clock with alarm for La Plateforme school project
 
 Python 3  
 Python librairies :  
-  time   
-  threading   
-  keyboard    
+  - time   
+  - threading   
+  - keyboard
+  - msvcrt
+  - tkinter
+  - pygames
 
 ## Use 
 
@@ -19,3 +22,8 @@ Press enter to skip and set no alarm / default local time respectively.
 To pause and resume the clock, type P on the keyboard  
 To toggle between 24H and 12AM/PM display, type M on the keyboard  
 To set an alarm at any time while the clock is running, press A on the keyboard
+
+## GUI
+
+clock tkinter.py is a graphic user interface for our clock, which is more user friendly, and has a sound alarm 
+All features are accessible with clickable buttons, and are self-explanatory
