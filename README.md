@@ -27,3 +27,10 @@ To set an alarm at any time while the clock is running, press A on the keyboard
 
 clock tkinter.py is a graphic user interface for our clock, which is more user friendly, and has a sound alarm 
 All features are accessible with clickable buttons, and are self-explanatory
+
+### Possible improvements 
+
+- Add a function to add more alarms. Add a function to track the current alarms.
+- Add a function to loop the alarm until a key is pressed.
+- Add custom sounds for the alarms, and a way to preview them on setup.
+- Modify the way alarms and current time are set : with a calendar, a scrollable entry box rather than a typed input for example.
