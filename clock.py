@@ -3,7 +3,9 @@ import threading
 import keyboard 
 # keyboard input management
 import msvcrt
+# for sound alarm
 import pygame
+# to fetch audio file without path issues
 import os
 
 printing = True
@@ -151,6 +153,7 @@ def play_sound():
     pygame.mixer.music.play()
 
 def keyboard_inputs() : 
+    """ Initializes all possible keyboard inputs """
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", change_display_setting)
     keyboard.on_press_key("ctrl", change_alarm)
