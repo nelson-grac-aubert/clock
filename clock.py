@@ -3,6 +3,8 @@ import threading
 import keyboard 
 # keyboard input management
 import msvcrt
+import pygame
+import os
 
 def clear_input_buffer():
     """ called to clear the keyboard buffer due to keyboard library
@@ -102,6 +104,7 @@ def display_time(h, m, s, mode, alarm):
 
     if (h, m, s) == alarm:
         print("Wake up granny Jeannine!")
+        play_sound()
 
 def clock(current_time):
     global alarm
@@ -112,7 +115,7 @@ def clock(current_time):
 
     print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
     print("Press P to pause and resume the clock at any time")
-    print("Press A to set an alarm at any time\n")
+    print("Press CTRL to set an alarm at any time\n")
 
     while True:
         if not paused : 
@@ -132,6 +135,15 @@ def clock(current_time):
         else : 
             # short sleep to save on CPU during while loop without printing
             time.sleep(0.1)
+
+def play_sound():
+    """ Plays alarm sound """
+    pygame.mixer.init()
+    base_path = os.path.dirname(__file__)  # répertoire du script
+    sound_path = os.path.join(base_path, "alarm.wav")
+    pygame.mixer.music.load(sound_path)
+    pygame.mixer.music.play()
+
 
 if __name__ == "__main__" : 
 
@@ -154,5 +166,5 @@ if __name__ == "__main__" :
     # keyboard doesn't work in IDEs such as VSCode : open the programm in terminal with Python
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", change_display_setting)
-    keyboard.on_press_key("a", change_alarm)
+    keyboard.on_press_key("ctrl", change_alarm)
     keyboard.wait()
