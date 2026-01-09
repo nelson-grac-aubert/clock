@@ -15,7 +15,7 @@ alarm_input = "Do you wish to set an alarm? If so, type it with the format hh:mm
 time_input = "\nDo you wish to set a custom current time? If so, type it with the format hh:mm:ss \nPress enter to set default local time "
 
 def clear_input_buffer():
-    """ called to clear the keyboard buffer due to keyboard library
+    """ called to clear the keyboard buffer caused by keyboard library
     allows to always start with an empty imput field """
     # as long as there's an input in the keyboard buffer
     while msvcrt.kbhit():
@@ -70,7 +70,7 @@ def set_alarm(t=None):
     return alarm
 
 def change_display_setting(event=None): 
-    """ Swaps mode between 24H and AM/PM """
+    """ swaps mode between 24H and AM/PM """
     global mode
     if mode == 12 : 
         mode = 24
@@ -80,7 +80,7 @@ def change_display_setting(event=None):
         print("AM/PM display mode set")
 
 def toggle_pause(event=None):
-    """ Toggles pause for clock """
+    """ toggles pause for clock """
     global paused
 
     paused = not paused
@@ -90,8 +90,9 @@ def toggle_pause(event=None):
         print("Clock resumed")
 
 def toggle_suspend(event=None) : 
-    """ Stops printing but clock still runs"""
+    """ stops printing but clock still runs"""
     global printing 
+
     printing = not printing 
     if printing : 
         print("Display resumed")
@@ -99,7 +100,7 @@ def toggle_suspend(event=None) :
         print("Display stopped. Clock is still running")
 
 def change_alarm(event=None) : 
-    """ Opens input to set new alarm """
+    """ pause printing and opens input for alarm setting """
     global printing
     global alarm
     printing = False
@@ -108,7 +109,7 @@ def change_alarm(event=None) :
     printing = True
 
 def display_time(h, m, s, mode, alarm):
-    """ Prints current time, depending on mode, prints alarm message """
+    """ prints current time, depending on mode, prints alarm message """
 
     if mode == 24:
         print(f"{h:02d}:{m:02d}:{s:02d}")
@@ -124,16 +125,13 @@ def display_time(h, m, s, mode, alarm):
         play_sound()
 
 def clock(current_time):
+    """ main function to increment time """
     global alarm
     global paused
     global printing
     global mode
-    h, m, s = current_time
 
-    print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
-    print("Press P to pause and resume the clock at any time")
-    print("Press S to suspend clock display, but keep it running in background")
-    print("Press CTRL to set an alarm at any time\n")
+    h, m, s = current_time
     
     while True:
         if not paused : 
@@ -155,22 +153,32 @@ def clock(current_time):
             time.sleep(0.1)
 
 def play_sound():
-    """ Plays alarm sound """
+    """ plays alarm sound """
     pygame.mixer.init()
-    base_path = os.path.dirname(__file__)  # répertoire du script
+    # always find the alarm sound file from script directory
+    base_path = os.path.dirname(__file__)  
     sound_path = os.path.join(base_path, "alarm.wav")
     pygame.mixer.music.load(sound_path)
     pygame.mixer.music.play()
 
 def keyboard_inputs() : 
-    """ Initializes all possible keyboard inputs """
+    """ initializes all possible keyboard inputs """
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", change_display_setting)
     keyboard.on_press_key("ctrl", change_alarm)
     keyboard.on_press_key("s", toggle_suspend)
     keyboard.wait()
 
+def initial_prints() : 
+    """ start of the program prints to give user info """
+    print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
+    print("Press P to pause and resume the clock at any time")
+    print("Press S to suspend clock display, but keep it running in background")
+    print("Press CTRL to set an alarm at any time\n")
+
 if __name__ == "__main__" : 
+
+    initial_prints()
 
     alarm = ask_for_time(alarm_input)
     set_alarm(alarm)
