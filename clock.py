@@ -89,6 +89,15 @@ def toggle_pause(event=None):
     else:
         print("Clock resumed")
 
+def toggle_suspend(event=None) : 
+    """ Stops printing but clock still runs"""
+    global printing 
+    printing = not printing 
+    if printing : 
+        print("Display resumed")
+    else : 
+        print("Display stopped. Clock is still running")
+
 def change_alarm(event=None) : 
     """ Opens input to set new alarm """
     global printing
@@ -123,8 +132,9 @@ def clock(current_time):
 
     print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
     print("Press P to pause and resume the clock at any time")
+    print("Press S to suspend clock display, but keep it running in background")
     print("Press CTRL to set an alarm at any time\n")
-
+    
     while True:
         if not paused : 
             if printing : 
@@ -157,6 +167,7 @@ def keyboard_inputs() :
     keyboard.on_press_key("p", toggle_pause)
     keyboard.on_press_key("m", change_display_setting)
     keyboard.on_press_key("ctrl", change_alarm)
+    keyboard.on_press_key("s", toggle_suspend)
     keyboard.wait()
 
 if __name__ == "__main__" : 
