@@ -4,9 +4,12 @@ import keyboard
 # keyboard input management
 import msvcrt
 # for sound alarm
+import os
+# to prevent pygame from displaying its message in terminal on script launch
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "1"
 import pygame
 # to fetch audio file without path issues
-import os
+
 
 printing = True
 paused = False
@@ -46,7 +49,7 @@ def afficher_heure(t=None):
     if t is None:
         local = time.localtime()
         current_time = (local.tm_hour, local.tm_min, local.tm_sec)
-        print("\nDefault local time has been set.")
+        print("\nDefault local time has been set.\n")
     else:
         current_time = t
     return current_time
@@ -171,7 +174,8 @@ def keyboard_inputs() :
 
 def initial_prints() : 
     """ start of the program prints to give user info """
-    print("\nDefault display mode is 24:00. Press M to toggle between AM/PM.")
+    print("GRANNY JEANNINE'S CLOCK FEATURES :\n")
+    print("Default display mode is 24:00. Press M to toggle between AM/PM.")
     print("Press P to pause and resume the clock at any time")
     print("Press S to suspend clock display, but keep it running in background")
     print("Press CTRL to set an alarm at any time\n")
